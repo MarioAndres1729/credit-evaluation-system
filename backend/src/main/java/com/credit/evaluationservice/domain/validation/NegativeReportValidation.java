@@ -7,14 +7,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(2)
-public class ScoreValidation implements Validation {
-
-    private static final int MINIMUM_SCORE = 600;
+@Order(4)
+public class NegativeReportValidation implements Validation {
 
     private final BureauClient bureauClient;
 
-    public ScoreValidation(BureauClient bureauClient) {
+    public NegativeReportValidation(BureauClient bureauClient) {
         this.bureauClient = bureauClient;
     }
 
@@ -27,20 +25,18 @@ public class ScoreValidation implements Validation {
                         application.getNumeroDocumento()
                 );
 
-        int score = bureauInformation.getScore();
-
-        if (score >= MINIMUM_SCORE) {
+        if (bureauInformation.isReporteNegativo()) {
             return new ValidationResult(
-                    "Score",
-                    true,
-                    "Score " + score + " >= " + MINIMUM_SCORE
+                    "Reporte negativo",
+                    false,
+                    "El cliente presenta reporte negativo en el buró"
             );
         }
 
         return new ValidationResult(
-            "Score",
-                false,
-                "Score " + score + " < " + MINIMUM_SCORE
+                "Reporte negativo",
+                true,
+                "Sin reportes negativos"
         );
     }
 }
