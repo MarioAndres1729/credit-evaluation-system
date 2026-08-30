@@ -3,6 +3,7 @@ package com.credit.evaluationservice.application.decision;
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.validation.Validation;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
