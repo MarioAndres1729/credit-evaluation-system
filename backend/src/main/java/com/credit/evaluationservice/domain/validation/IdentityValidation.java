@@ -1,37 +1,39 @@
 package com.credit.evaluationservice.domain.validation;
 
-import java.util.Set;
-import org.springframework.stereotype.Component;
 import com.credit.evaluationservice.domain.CreditApplication;
+import com.credit.evaluationservice.domain.repository.BlacklistRepository;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 @Component
+@Order(1)
 public class IdentityValidation implements Validation {
 
-    private final Set<String> blockedDocuments = Set.of(
-        "1111111111",
-        "2222222222",
-        "3333333333"
-    );
+    private final BlacklistRepository blacklistRepository;
+
+    public IdentityValidation(BlacklistRepository blacklistRepository) {
+        this.blacklistRepository = blacklistRepository;
+    }
 
     @Override
     public ValidationResult validate(CreditApplication application) {
 
-        boolean blocked = blockedDocuments.contains(
-            application.getDocumentNumber()
+        boolean blocked = blacklistRepository.isBlocked(
+                application.getNumeroDocumento()
         );
 
         if (blocked) {
             return new ValidationResult(
-                "Identidad",
-                false,
-                "Documento encontrado en lista de bloqueo"
+                    "Identidad",
+                    false,
+                    "Documento encontrado en lista de bloqueo"
             );
         }
 
         return new ValidationResult(
-            "Identidad",
-            true,
-            "Documento no bloqueado"
+                "Identidad",
+                true,
+                "Documento no bloqueado"
         );
     }
 }

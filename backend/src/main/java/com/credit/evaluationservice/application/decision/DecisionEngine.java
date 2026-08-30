@@ -1,10 +1,13 @@
-package com.credit.evaluationservice.application;
+package com.credit.evaluationservice.application.decision;
 
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.validation.Validation;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
-import java.util.List;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DecisionEngine {
@@ -15,16 +18,21 @@ public class DecisionEngine {
         this.validations = validations;
     }
 
-    public ValidationResult evaluate(CreditApplication application) {
+    public EvaluationResult evaluate(CreditApplication application) {
+
+        List<ValidationResult> validationResults = new ArrayList<>();
 
         for (Validation validation : validations) {
+
             ValidationResult result = validation.validate(application);
 
-            if (!result.isApproved()) {
-                return result;
+            validationResults.add(result);
+
+            if (!result.isAprobado()) {
+                break;
             }
         }
 
-        return new ValidationResult("DecisionEngine", true, "All validations passed.");
+        return new EvaluationResult(validationResults);
     }
 }

@@ -1,5 +1,6 @@
 package com.credit.evaluationservice.presentation;
 
+import com.credit.evaluationservice.application.decision.EvaluationResult;
 import com.credit.evaluationservice.application.service.CreditApplicationService;
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
@@ -25,9 +26,9 @@ public class CreditApplicationController {
      * DecisionEngine (comenzando con IdentityValidation) y retorna el resultado.
      */
     @PostMapping
-    public ResponseEntity<ValidationResult> crearSolicitud(
+    public ResponseEntity<EvaluationResult> crearSolicitud(
             @Valid @RequestBody CreditApplication request) {
-        ValidationResult response = creditEvaluationService.evaluate(request);
+        EvaluationResult response = creditEvaluationService.evaluate(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
