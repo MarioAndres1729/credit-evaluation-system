@@ -6,33 +6,36 @@ import jakarta.validation.constraints.Pattern;
 public class CreditApplication {
 
     @NotBlank(message = "El tipo de documento es obligatorio")
-    private String documentType;
+    private String tipoDocumento;
 
     @NotBlank(message = "El número de documento es obligatorio")
-    @Pattern(regexp = "^[0-9]{6,12}$", message = "El número de documento debe ser numérico y contener entre 6 y 12 dígitos")
-    private String documentNumber;
+    @Pattern(
+            regexp = "^[0-9]{6,12}$",
+            message = "El número de documento debe ser numérico y contener entre 6 y 12 dígitos"
+    )
+    private String numeroDocumento;
 
     public CreditApplication() {
     }
 
-    public CreditApplication(String documentType, String documentNumber) {
-        this.documentType = documentType;
-        this.documentNumber = documentNumber;
+    public CreditApplication(String tipoDocumento, String numeroDocumento) {
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
     }
 
-    public String getDocumentType() {
-        return documentType;
+    public String getTipoDocumento() {
+        return tipoDocumento;
     }
 
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
     }
 
-    public String getDocumentNumber() {
-        return documentNumber;
+    public String getNumeroDocumento() {
+        return numeroDocumento;
     }
 
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 }

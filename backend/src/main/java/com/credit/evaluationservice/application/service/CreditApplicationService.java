@@ -1,8 +1,8 @@
 package com.credit.evaluationservice.application.service;
 
+import com.credit.evaluationservice.application.decision.EvaluationResult;
 import com.credit.evaluationservice.domain.CreditApplication;
-import com.credit.evaluationservice.domain.validation.ValidationResult;
 
 public interface CreditApplicationService {
-    ValidationResult evaluate(CreditApplication request);
+    EvaluationResult evaluate(CreditApplication request);
 }

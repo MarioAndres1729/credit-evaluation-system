@@ -3,28 +3,28 @@ package com.credit.evaluationservice.domain.validation;
 
 public class ValidationResult {
 
-    private final String validationName;
-    private final boolean approved;
-    private final String detail;
+    private final String nombreValidacion;
+    private final boolean resultado;
+    private final String detalle;
 
     public ValidationResult(
-            String validationName,
-            boolean approved,
-            String detail) {
-        this.validationName = validationName;
-        this.approved = approved;
-        this.detail = detail;
+            String nombreValidacion,
+            boolean resultado,
+            String detalle) {
+        this.nombreValidacion = nombreValidacion;
+        this.resultado = resultado;
+        this.detalle = detalle;
     }
 
-    public String getValidationName() {
-        return validationName;
+    public String getNombreValidacion() {
+        return nombreValidacion;
     }
 
-    public boolean isApproved() {
-        return approved;
+    public boolean isAprobado() {
+        return resultado;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getDetalle() {
+        return detalle;
     }
 }

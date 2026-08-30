@@ -1,8 +1,8 @@
 package com.credit.evaluationservice.application.service;
 
-import com.credit.evaluationservice.application.DecisionEngine;
+import com.credit.evaluationservice.application.decision.DecisionEngine;
+import com.credit.evaluationservice.application.decision.EvaluationResult;
 import com.credit.evaluationservice.domain.CreditApplication;
-import com.credit.evaluationservice.domain.validation.ValidationResult;
 
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     }
 
     @Override
-    public ValidationResult evaluate(CreditApplication application) {
+    public EvaluationResult evaluate(CreditApplication application) {
         return decisionEngine.evaluate(application);
     }
 }
