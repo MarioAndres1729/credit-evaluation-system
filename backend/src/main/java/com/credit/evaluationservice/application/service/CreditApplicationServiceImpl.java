@@ -6,6 +6,11 @@ import com.credit.evaluationservice.application.response.EvaluationResponseBuild
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.exception.BureauUnavailableException;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
+import com.credit.evaluationservice.infrastructure.persistence.SolicitudesEntity;
+import com.credit.evaluationservice.infrastructure.persistence.SolicitudesRepository;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -16,11 +21,16 @@ public class CreditApplicationServiceImpl
         implements CreditApplicationService {
 
     private final DecisionEngine decisionEngine;
+    private final SolicitudesRepository solicitudesRepository;
+    private final ObjectMapper objectMapper =
+        new ObjectMapper();
 
     public CreditApplicationServiceImpl(
-            DecisionEngine decisionEngine) {
+            DecisionEngine decisionEngine,
+            SolicitudesRepository solicitudesRepository) {
 
         this.decisionEngine = decisionEngine;
+        this.solicitudesRepository = solicitudesRepository;
     }
 
     @Override
@@ -32,17 +42,68 @@ public class CreditApplicationServiceImpl
             List<ValidationResult> validationResults =
                     decisionEngine.evaluate(application);
 
-            return new EvaluationResponseBuilder()
-                    .construirSolicitante(application)
-                    .construirEvaluacion(validationResults)
-                    .construirResultado(application, validationResults)
-                    .build();
+            EvaluationResponse response =
+                    new EvaluationResponseBuilder()
+                            .construirSolicitante(application)
+                            .construirEvaluacion(validationResults)
+                            .construirResultado(
+                                    application,
+                                    validationResults
+                            )
+                            .build();
+
+            guardarSolicitud(application, response);
+
+            return response;
 
         } catch (BureauUnavailableException e) {
-            return new EvaluationResponseBuilder()
-                    .construirSolicitante(application)
-                    .construirBureauUnavailable()
-                    .build();
+
+            EvaluationResponse response =
+                    new EvaluationResponseBuilder()
+                            .construirSolicitante(application)
+                            .construirBureauUnavailable()
+                            .build();
+
+            guardarSolicitud(application, response);
+
+            return response;
         }
+    }
+
+    private void guardarSolicitud(
+            CreditApplication application,
+            EvaluationResponse response) {
+
+        SolicitudesEntity entity = new SolicitudesEntity();
+
+        entity.setIdSolicitud(response.getIdSolicitud());
+        entity.setFechaCreacion(response.getFechaCreacion());
+        entity.setTipoDocumento(application.getTipoDocumento());
+        entity.setNumeroDocumento(application.getNumeroDocumento());
+        entity.setNombresApellidos(application.getNombresApellidos());
+        entity.setCorreoElectronico(application.getCorreoElectronico());
+        entity.setTelefonoCelular(application.getTelefonoCelular());
+        entity.setMontoSolicitado(application.getMontoSolicitado());
+        entity.setPlazoMeses(application.getPlazoMeses());
+        entity.setEstado(response.getEstado());
+
+        if (response.getDetalle() != null) {
+            entity.setTasaEstimada(response.getDetalle().getTasaEstimada());
+        }
+
+        if (response.getEvaluacion() != null) {
+            entity.setScoreBureau(response.getEvaluacion().getScoreBureau());
+            try {
+                entity.setValidaciones(objectMapper.writeValueAsString(
+                    response.getEvaluacion().getValidaciones()));
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(
+                    "No fue posible guardar las validaciones", e);
+            }
+        }
+
+        entity.setSiguientePaso(response.getSiguientePaso());
+
+        solicitudesRepository.save(entity);
     }
 }

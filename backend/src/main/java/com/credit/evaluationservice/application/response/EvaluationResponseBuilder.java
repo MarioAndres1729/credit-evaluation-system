@@ -104,9 +104,7 @@ public class EvaluationResponseBuilder {
                                 == ValidationStatus.DOCUMENTO_BLOQUEADO);
 
         if (documentoBloqueado) {
-
             this.estado = "RECHAZADO_FRAUDE";
-
             return this;
         }
 
@@ -115,9 +113,7 @@ public class EvaluationResponseBuilder {
          * las reglas de decisión crediticia.
          */
         if (scoreBureau == null) {
-
-            this.estado = "RECHAZADO";
-
+            this.estado = "RECHAZADO"; //revisar esta lógcica, si no hay score
             return this;
         }
 
@@ -125,9 +121,7 @@ public class EvaluationResponseBuilder {
          * 2. Score menor a 600
          */
         if (scoreBureau < 600) {
-
             this.estado = "RECHAZADO";
-
             return this;
         }
 
@@ -140,9 +134,7 @@ public class EvaluationResponseBuilder {
                                 == ValidationStatus.RECHAZADO);
 
         if (validationRejected) {
-
             this.estado = "RECHAZADO";
-
             return this;
         }
 
@@ -160,9 +152,7 @@ public class EvaluationResponseBuilder {
          */
         if (scoreBureau >= 700
                 && montoSolicitado <= ingresosMensuales * 8) {
-
             this.estado = "APROBADO";
-
             this.detalle = new CreditDetail(
                     montoSolicitado,
                     application.getPlazoMeses(),
