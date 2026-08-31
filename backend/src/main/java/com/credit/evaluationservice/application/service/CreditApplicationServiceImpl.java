@@ -13,6 +13,8 @@ import com.credit.evaluationservice.infrastructure.persistence.SolicitudesReposi
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,13 +25,11 @@ public class CreditApplicationServiceImpl
 
     private final DecisionEngine decisionEngine;
     private final SolicitudesRepository solicitudesRepository;
-    private final ObjectMapper objectMapper =
-        new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CreditApplicationServiceImpl(
             DecisionEngine decisionEngine,
             SolicitudesRepository solicitudesRepository) {
-
         this.decisionEngine = decisionEngine;
         this.solicitudesRepository = solicitudesRepository;
     }
@@ -38,13 +38,23 @@ public class CreditApplicationServiceImpl
     public EvaluationResponse evaluate(
             CreditApplication application) {
 
+            long cantidad = solicitudesRepository
+                    .countByTipoDocumentoAndNumeroDocumento(
+                            application.getTipoDocumento(),
+                            application.getNumeroDocumento()
+                    );
+
+            long numSolicitudes = cantidad + 1;
+            String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String idSolicitud = String.format("SOL-%s-%03d", datePart, numSolicitudes);  
+
         try {
 
             List<ValidationResult> validationResults =
                     decisionEngine.evaluate(application);
 
             EvaluationResponse response =
-                    new EvaluationResponseBuilder()
+                    new EvaluationResponseBuilder(idSolicitud)
                             .construirSolicitante(application)
                             .construirEvaluacion(validationResults)
                             .construirResultado(
@@ -60,7 +70,7 @@ public class CreditApplicationServiceImpl
         } catch (BureauUnavailableException e) {
 
             EvaluationResponse response =
-                    new EvaluationResponseBuilder()
+                    new EvaluationResponseBuilder(idSolicitud)
                             .construirSolicitante(application)
                             .construirBureauUnavailable()
                             .build();

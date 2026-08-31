@@ -11,4 +11,9 @@ public interface SolicitudesRepository
             String tipoDocumento,
             String numeroDocumento
     );
+
+    long countByTipoDocumentoAndNumeroDocumento(
+        String tipoDocumento,
+        String numeroDocumento
+  );
 }

@@ -5,11 +5,12 @@ import com.credit.mock_buro.dto.BureauResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class BureauMockService {
 
-    public BureauResponseDTO consultar(BureauRequestDTO request) {
+    public BureauResponseDTO consultar(BureauRequestDTO request) {      
 
         String numeroDocumento = request.getNumeroDocumento();
 
@@ -22,16 +23,18 @@ public class BureauMockService {
         );
 
         if (ultimoDigito % 2 == 0) {
+            int score = ThreadLocalRandom.current().nextInt(600, 850);
             return new BureauResponseDTO(
-                    750,
+                    score,
                     "ACTIVO",
                     false,
                     LocalDateTime.now()
             );
         }
 
-        return new BureauResponseDTO(
-                450,
+        int score = ThreadLocalRandom.current().nextInt(300, 550);
+        return new BureauResponseDTO(            
+                score,
                 "ACTIVO",
                 true,
                 LocalDateTime.now()

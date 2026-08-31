@@ -5,8 +5,6 @@ import com.credit.evaluationservice.domain.validation.ValidationResult;
 import com.credit.evaluationservice.domain.validation.ValidationStatus;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
 
 public class EvaluationResponseBuilder {
@@ -20,11 +18,8 @@ public class EvaluationResponseBuilder {
     private EvaluationDetail evaluacion;
     private String siguientePaso;
 
-    public EvaluationResponseBuilder() {
-        String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        int sequence = ThreadLocalRandom.current().nextInt(1, 1000);
-        
-        this.idSolicitud = String.format("SOL-%s-%03d", datePart, sequence);
+    public EvaluationResponseBuilder(String idSolicitud) {        
+        this.idSolicitud = idSolicitud;
         this.fechaCreacion = LocalDateTime.now();
     }
 
@@ -117,7 +112,7 @@ public class EvaluationResponseBuilder {
          * las reglas de decisión crediticia.
          */
         if (scoreBureau == null) {
-            this.estado = "RECHAZADO"; //revisar esta lógcica, si no hay score
+            this.estado = "RECHAZADO"; //revisar esta lógica, si no hay score
             return this;
         }
 
