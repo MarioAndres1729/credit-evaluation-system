@@ -125,6 +125,5 @@ button {
 /* Hover state */
 .form-container:hover {
   border-color: #2f8acb;
-  transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(45, 130, 37, 0.12);
 }

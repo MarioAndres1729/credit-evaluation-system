@@ -15,3 +15,14 @@ export interface SolicitudConsultaResponse {
   validaciones: ValidationResult[];
   siguientePaso: string | null;
 }
+
+export interface SolicitudCreacionRequest {
+  tipoDocumento: string;
+  numeroDocumento: string;
+  nombresApellidos: string;
+  correoElectronico: string;
+  telefonoCelular: string;
+  montoSolicitado: number;
+  plazoMeses: number;
+  ingresosMensuales: number;
+}

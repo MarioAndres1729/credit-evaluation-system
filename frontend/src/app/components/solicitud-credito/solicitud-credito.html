@@ -135,10 +135,11 @@
 
     <!-- Botones -->
     <div class="form-actions">
-      <button type="button" class="btn-secondary" (click)="onVolver()">← Volver a Consulta</button>
-      <button type="button" class="btn-secondary" (click)="onReset()">Limpiar</button>
-      <button type="submit" class="btn-primary" [disabled]="creditForm.invalid && isSubmitted">
-        Enviar Solicitud
+      <button type="button" class="btn-secondary" (click)="onVolver()" [disabled]="isSubmitting">← Volver a Consulta</button>
+      <button type="button" class="btn-secondary" (click)="onReset()" [disabled]="isSubmitting">Limpiar</button>
+      <button type="submit" class="btn-primary" [disabled]="(creditForm.invalid && isSubmitted) || isSubmitting">
+        <span *ngIf="!isSubmitting">Enviar Solicitud</span>
+        <span *ngIf="isSubmitting">Enviando solicitud...</span>
       </button>
     </div>
 

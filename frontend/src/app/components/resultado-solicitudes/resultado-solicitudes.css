@@ -86,7 +86,8 @@
 }
 
 /* Spinner / Loading */
-.loading-state, .empty-state {
+.loading-state,
+.empty-state {
   text-align: center;
   background-color: #ffffff;
   padding: 3.5rem 2rem;
@@ -105,7 +106,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .empty-icon {
@@ -132,7 +135,6 @@
 
 .detail-card:hover {
   border-color: #2f8acb;
-  transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(47, 138, 203, 0.15);
 }
 
@@ -185,6 +187,7 @@
   color: #1d8f21;
   border: 1px solid #bbf7d0;
 }
+
 .status-aprobado .status-dot {
   background-color: #1d8f21;
 }
@@ -194,6 +197,7 @@
   color: #0369a1;
   border: 1px solid #bae6fd;
 }
+
 .status-preaprobado .status-dot {
   background-color: #0284c7;
 }
@@ -203,6 +207,7 @@
   color: #dc2626;
   border: 1px solid #fecaca;
 }
+
 .status-rechazado .status-dot {
   background-color: #dc2626;
 }
@@ -212,6 +217,7 @@
   color: #1d4880;
   border: 1px solid #bfdbfe;
 }
+
 .status-pendiente .status-dot {
   background-color: #3496db;
 }

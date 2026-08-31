@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { SolicitudService } from '../../services/solicitud.service';
+import { SolicitudCreacionRequest } from '../../models/solicitud.model';
 
 @Component({
   selector: 'app-solicitud-credito',
-  standalone: true, // Required so app.ts can import it
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './solicitud-credito.html',
   styleUrl: './solicitud-credito.css'
@@ -14,6 +16,8 @@ export class SolicitudCreditoComponent implements OnInit {
 
   creditForm!: FormGroup;
   isSubmitted = false;
+  isSubmitting = false;
+  errorMessage = '';
 
   documentTypes = [
     { code: 'CC', label: 'Cédula de Ciudadanía' },
@@ -25,8 +29,9 @@ export class SolicitudCreditoComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
-  ) {}
+    private router: Router,
+    private solicitudService: SolicitudService
+  ) { }
 
   ngOnInit(): void {
     this.creditForm = this.fb.group({
@@ -72,15 +77,55 @@ export class SolicitudCreditoComponent implements OnInit {
 
   onSubmit(): void {
     this.isSubmitted = true;
+    this.errorMessage = '';
+
     if (this.creditForm.invalid) {
       this.creditForm.markAllAsTouched();
       return;
     }
-    console.log('Form submission:', this.creditForm.value);
+
+    const formVal = this.creditForm.value;
+    const request: SolicitudCreacionRequest = {
+      tipoDocumento: formVal.documentType,
+      numeroDocumento: formVal.documentNumber,
+      nombresApellidos: formVal.fullName,
+      correoElectronico: formVal.email,
+      telefonoCelular: formVal.phone,
+      montoSolicitado: Number(formVal.requestedAmount),
+      plazoMeses: Number(formVal.termMonths),
+      ingresosMensuales: Number(formVal.monthlyIncome)
+    };
+
+    this.isSubmitting = true;
+    this.solicitudService.crearSolicitud(request).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        const createdId = response?.idSolicitud || response?.id;
+        this.router.navigate(['/resultado-solicitudes'], {
+          queryParams: {
+            tipoDoc: request.tipoDocumento,
+            numDoc: request.numeroDocumento,
+            ...(createdId ? { selectedId: createdId } : {})
+          }
+        });
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        console.error('[SolicitudCredito] Error al enviar solicitud:', error);
+        this.router.navigate(['/resultado-solicitudes'], {
+          queryParams: {
+            tipoDoc: request.tipoDocumento,
+            numDoc: request.numeroDocumento
+          }
+        });
+      }
+    });
   }
 
   onReset(): void {
     this.isSubmitted = false;
+    this.isSubmitting = false;
+    this.errorMessage = '';
     this.creditForm.reset();
   }
 

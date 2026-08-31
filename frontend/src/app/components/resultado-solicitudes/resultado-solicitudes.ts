@@ -26,21 +26,20 @@ export class ResultadoSolicitudesComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subs.add(
       this.route.queryParams.subscribe((params) => {
         const tipoDoc = params['tipoDoc'] || this.solicitudService.currentTipoDoc;
         const numDoc = params['numDoc'] || this.solicitudService.currentNumDoc;
+        const selectedId = params['selectedId'];
 
         this.tipoDocumento = tipoDoc || '';
         this.numeroDocumento = numDoc || '';
 
         if (tipoDoc && numDoc) {
-          this.consultar(tipoDoc, numDoc);
-        } else if (this.solicitudes.length === 0) {
-          this.consultar('PA', '12345678930');
+          this.consultar(tipoDoc, numDoc, selectedId);
         }
       })
     );
@@ -50,7 +49,7 @@ export class ResultadoSolicitudesComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
-  consultar(tipoDoc: string, numDoc: string): void {
+  consultar(tipoDoc: string, numDoc: string, selectedId?: string): void {
     this.isLoading = true;
     this.cdr.detectChanges();
 
@@ -58,7 +57,12 @@ export class ResultadoSolicitudesComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.solicitudes = data || [];
         if (this.solicitudes.length > 0) {
-          this.selectedSolicitud = this.solicitudes[0];
+          if (selectedId) {
+            const found = this.solicitudes.find(s => s.idSolicitud === selectedId);
+            this.selectedSolicitud = found || this.getLastSolicitud();
+          } else {
+            this.selectedSolicitud = this.getLastSolicitud();
+          }
         } else {
           this.selectedSolicitud = null;
         }
@@ -71,6 +75,26 @@ export class ResultadoSolicitudesComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  getLastSolicitud(): SolicitudConsultaResponse | null {
+    if (!this.solicitudes || this.solicitudes.length === 0) return null;
+    if (this.solicitudes.length === 1) return this.solicitudes[0];
+
+    // Ordena en orden descendente por secuencia de ID para encontrar la última solicitud.
+    const copy = [...this.solicitudes];
+    copy.sort((a, b) => {
+      const idA = a.idSolicitud || '';
+      const idB = b.idSolicitud || '';
+      return idB.localeCompare(idA, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    return copy[0];
+  }
+
+  isLastSolicitud(solicitud: SolicitudConsultaResponse | null): boolean {
+    if (!solicitud) return false;
+    const last = this.getLastSolicitud();
+    return last?.idSolicitud === solicitud.idSolicitud;
   }
 
   onSelectSolicitud(solicitud: SolicitudConsultaResponse): void {

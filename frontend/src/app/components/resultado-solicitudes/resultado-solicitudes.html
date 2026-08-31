@@ -37,7 +37,7 @@
 
   <!-- Contenido Principal cuando hay resultados -->
   <div class="content-grid" *ngIf="!isLoading && solicitudes.length > 0">
-    
+
     <!-- TARJETA PRINCIPAL: DETALLE DE LA SOLICITUD SELECCIONADA -->
     <div class="detail-card" *ngIf="selectedSolicitud">
       <div class="detail-header">
@@ -79,7 +79,7 @@
             {{ selectedSolicitud.scoreBureau !== null ? selectedSolicitud.scoreBureau : 'N/A' }}
           </span>
           <span class="metric-sub" *ngIf="selectedSolicitud.scoreBureau">
-            {{ selectedSolicitud.scoreBureau >= 700 ? 'Riesgo Bajo / Óptimo' : 'Riesgo Moderado' }}
+            {{ selectedSolicitud.scoreBureau >= 700 ? 'Riesgo Bajo / Óptimo' : 'Riesgo Alto' }}
           </span>
           <span class="metric-sub" *ngIf="!selectedSolicitud.scoreBureau">No registrado</span>
         </div>
@@ -89,11 +89,9 @@
       <div class="validations-section">
         <h3>Validaciones de Sistema</h3>
         <p class="section-desc">Resultados de las políticas y comprobaciones automatizadas:</p>
-        
+
         <div class="validations-list">
-          <div 
-            class="validation-item" 
-            *ngFor="let val of selectedSolicitud.validaciones"
+          <div class="validation-item" *ngFor="let val of selectedSolicitud.validaciones"
             [ngClass]="getValidationStatusClass(val.resultado)">
             <div class="val-left">
               <span class="val-icon">{{ getValidationIcon(val.resultado) }}</span>
@@ -147,8 +145,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr 
-              *ngFor="let item of solicitudes" 
+            <tr *ngFor="let item of solicitudes"
               [class.selected-row]="selectedSolicitud?.idSolicitud === item.idSolicitud">
               <td>
                 <strong>{{ item.idSolicitud }}</strong>
@@ -162,10 +159,7 @@
                 </span>
               </td>
               <td>
-                <button 
-                  type="button" 
-                  class="btn-table-action"
-                  (click)="onSelectSolicitud(item)">
+                <button type="button" class="btn-table-action" (click)="onSelectSolicitud(item)">
                   {{ selectedSolicitud?.idSolicitud === item.idSolicitud ? 'Viendo' : 'Ver detalle' }}
                 </button>
               </td>
