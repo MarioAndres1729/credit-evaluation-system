@@ -1,0 +1,135 @@
+.form-container {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #64748b;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+input, select {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+input.is-invalid, select.is-invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+input.is-invalid:focus, select.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+button {
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #1d8f21;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #2ad433;
+}
+
+.btn-secondary {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.btn-secondary:hover {
+  background-color: #cbd5e1;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.form-container {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border: 2px solid transparent; /* Added base border so transition is smooth */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Enables smooth movement */
+}
+
+/* Hover state */
+.form-container:hover {
+  border-color: #2d8225;
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(45, 130, 37, 0.12);
+}

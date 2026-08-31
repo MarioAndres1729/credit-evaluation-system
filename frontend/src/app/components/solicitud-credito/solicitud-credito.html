@@ -1,0 +1,145 @@
+<div class="form-container">
+  <h2>Nueva Solicitud de Crédito</h2>
+  <p class="subtitle">Ingresa tus datos personales y financieros para realizar una evaluación.</p>
+
+  <form [formGroup]="creditForm" (ngSubmit)="onSubmit()" novalidate>
+    
+    <!-- Tipo y número del documento -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="documentType">Tipo de Documento *</label>
+        <select id="documentType" formControlName="documentType" [class.is-invalid]="isFieldInvalid('documentType')">
+          <option value="" disabled selected>Seleccione...</option>
+          <option *ngFor="let doc of documentTypes" [value]="doc.code">
+            {{ doc.label }} ({{ doc.code }})
+          </option>
+        </select>
+        <div class="error-message" *ngIf="isFieldInvalid('documentType')">
+          <span>Seleccione un tipo de documento.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="documentNumber">Número de Documento *</label>
+        <input 
+          type="text" 
+          id="documentNumber" 
+          formControlName="documentNumber" 
+          placeholder="Ej: 1012345678"
+          [class.is-invalid]="isFieldInvalid('documentNumber')" 
+        />
+        <div class="error-message" *ngIf="isFieldInvalid('documentNumber')">
+          <span *ngIf="f['documentNumber'].errors?.['required']">El número de documento es requerido.</span>
+          <span *ngIf="f['documentNumber'].errors?.['pattern']">Debe ser numérico de 6 a 12 dígitos.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nombre Completo -->
+    <div class="form-group">
+      <label for="fullName">Nombres y Apellidos *</label>
+      <input 
+        type="text" 
+        id="fullName" 
+        formControlName="fullName" 
+        placeholder="Ej: Paco Perolas"
+        [class.is-invalid]="isFieldInvalid('fullName')" 
+      />
+      <div class="error-message" *ngIf="isFieldInvalid('fullName')">
+        <span *ngIf="f['fullName'].errors?.['required']">El nombre completo es requerido.</span>
+        <span *ngIf="f['fullName'].errors?.['pattern']">Solo se permiten letras y espacios.</span>
+      </div>
+    </div>
+
+    <!-- Datos de contacto: correo electrónico y teléfono -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">Correo Electrónico *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="ejemplo@correo.com"
+          [class.is-invalid]="isFieldInvalid('email')" 
+        />
+        <div class="error-message" *ngIf="isFieldInvalid('email')">
+          <span *ngIf="f['email'].errors?.['required']">El correo es requerido.</span>
+          <span *ngIf="f['email'].errors?.['email']">Ingresa un correo electrónico válido.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Teléfono Celular *</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          formControlName="phone" 
+          placeholder="Ej: 3001234567"
+          [class.is-invalid]="isFieldInvalid('phone')" 
+        />
+        <div class="error-message" *ngIf="isFieldInvalid('phone')">
+          <span *ngIf="f['phone'].errors?.['required']">El teléfono es requerido.</span>
+          <span *ngIf="f['phone'].errors?.['pattern']">Debe ser un número celular colombiano válido de 10 dígitos (iniciando en 3).</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Importe solicitado e ingresos mensuales -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="requestedAmount">Monto Solicitar (COP) *</label>
+        <input 
+          type="number" 
+          id="requestedAmount" 
+          formControlName="requestedAmount" 
+          placeholder="$ 1.000.000 - $ 50.000.000"
+          [class.is-invalid]="isFieldInvalid('requestedAmount')" 
+        />
+        <div class="error-message" *ngIf="isFieldInvalid('requestedAmount')">
+          <span *ngIf="f['requestedAmount'].errors?.['required']">El monto es requerido.</span>
+          <span *ngIf="f['requestedAmount'].errors?.['min'] || f['requestedAmount'].errors?.['max']">
+            El monto debe estar entre $1.000.000 y $50.000.000 COP.
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="monthlyIncome">Ingresos Mensuales (COP) *</label>
+        <input 
+          type="number" 
+          id="monthlyIncome" 
+          formControlName="monthlyIncome" 
+          placeholder="Ej: 2500000"
+          [class.is-invalid]="isFieldInvalid('monthlyIncome')" 
+        />
+        <div class="error-message" *ngIf="isFieldInvalid('monthlyIncome')">
+          <span *ngIf="f['monthlyIncome'].errors?.['required']">Los ingresos mensuales son requeridos.</span>
+          <span *ngIf="f['monthlyIncome'].errors?.['min']">El ingreso debe ser mayor a 0.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opción de Plazo -->
+    <div class="form-group">
+      <label for="termMonths">Plazo en Meses *</label>
+      <select id="termMonths" formControlName="termMonths" [class.is-invalid]="isFieldInvalid('termMonths')">
+        <option value="" disabled selected>Seleccione el plazo...</option>
+        <option *ngFor="let term of termOptions" [value]="term">
+          {{ term }} Meses
+        </option>
+      </select>
+      <div class="error-message" *ngIf="isFieldInvalid('termMonths')">
+        <span>Seleccione una opción de plazo.</span>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onReset()">Limpiar</button>
+      <button type="submit" class="btn-primary" [disabled]="creditForm.invalid && isSubmitted">
+        Enviar Solicitud
+      </button>
+    </div>
+
+  </form>
+</div>

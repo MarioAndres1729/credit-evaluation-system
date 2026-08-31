@@ -1,12 +1,13 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { SolicitudCreditoComponent } from './components/solicitud-credito/solicitud-credito';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [SolicitudCreditoComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('frontend');
+  title = 'Aventa Bank';
 }
