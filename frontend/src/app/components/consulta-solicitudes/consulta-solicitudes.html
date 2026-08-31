@@ -1,0 +1,61 @@
+<div class="form-container">
+  <div class="header-section">
+    <div class="badge">Inicio de sesión</div>
+    <h2>Consulta de Solicitudes</h2>
+    <p class="subtitle">Ingresa tu tipo y número de documento para consultar el estado de tus solicitudes o inicia una
+      nueva solicitud.</p>
+  </div>
+
+  <form [formGroup]="consultaForm" (ngSubmit)="onConsultar()" novalidate>
+    <!-- Tipo de Documento -->
+    <div class="form-group">
+      <label for="documentType">Tipo de Documento *</label>
+      <select id="documentType" formControlName="documentType" [class.is-invalid]="isFieldInvalid('documentType')">
+        <option value="" disabled selected>Seleccione...</option>
+        <option *ngFor="let doc of documentTypes" [value]="doc.code">
+          {{ doc.label }} ({{ doc.code }})
+        </option>
+      </select>
+      <div class="error-message" *ngIf="isFieldInvalid('documentType')">
+        <span>Seleccione un tipo de documento.</span>
+      </div>
+    </div>
+
+    <!-- Número de Documento -->
+    <div class="form-group">
+      <label for="documentNumber">Número de Documento *</label>
+      <input type="text" id="documentNumber" formControlName="documentNumber" placeholder="Ej: 1012345678"
+        [class.is-invalid]="isFieldInvalid('documentNumber')" />
+      <div class="error-message" *ngIf="isFieldInvalid('documentNumber')">
+        <span *ngIf="f['documentNumber'].errors?.['required']">El número de documento es requerido.</span>
+        <span *ngIf="f['documentNumber'].errors?.['pattern']">Debe ser numérico de 6 a 12 dígitos.</span>
+      </div>
+    </div>
+
+    <!-- Acciones / Botones -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" id="btnNuevaSolicitud" (click)="onNuevaSolicitud()">
+        Nueva solicitud
+      </button>
+      <button type="submit" class="btn-primary" id="btnConsultar" [disabled]="isSearching">
+        <span *ngIf="!isSearching">Consultar solicitudes</span>
+        <span *ngIf="isSearching">Consultando...</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Resultado de consulta simulado / feedback -->
+  <div class="result-box" *ngIf="hasSearched">
+    <div class="result-header">
+      <span class="result-icon">ℹ️</span>
+      <div>
+        <strong>Resultados de consulta</strong>
+        <p>No se encontraron solicitudes pendientes activas para el documento ingresado.</p>
+      </div>
+    </div>
+    <div class="result-action">
+      <p>¿Deseas iniciar una nueva solicitud?</p>
+      <button type="button" class="btn-link" (click)="onNuevaSolicitud()">Comenzar solicitud ahora →</button>
+    </div>
+  </div>
+</div>

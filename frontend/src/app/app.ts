@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { SolicitudCreditoComponent } from './components/solicitud-credito/solicitud-credito';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SolicitudCreditoComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

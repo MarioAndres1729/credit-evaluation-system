@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-solicitud-credito',
   standalone: true, // Required so app.ts can import it
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './solicitud-credito.html',
   styleUrl: './solicitud-credito.css'
 })
@@ -22,7 +23,10 @@ export class SolicitudCreditoComponent implements OnInit {
 
   termOptions = [12, 24, 36, 48];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.creditForm = this.fb.group({
@@ -78,5 +82,9 @@ export class SolicitudCreditoComponent implements OnInit {
   onReset(): void {
     this.isSubmitted = false;
     this.creditForm.reset();
+  }
+
+  onVolver(): void {
+    this.router.navigate(['/consulta-solicitudes']);
   }
 }

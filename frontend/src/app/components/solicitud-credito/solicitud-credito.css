@@ -1,13 +1,3 @@
-.form-container {
-  max-width: 680px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
 h2 {
   margin-top: 0;
   margin-bottom: 0.5rem;
@@ -41,7 +31,8 @@ label {
   margin-bottom: 0.5rem;
 }
 
-input, select {
+input,
+select {
   padding: 0.75rem 1rem;
   font-size: 0.95rem;
   border: 1px solid #cbd5e1;
@@ -51,18 +42,21 @@ input, select {
   outline: none;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   border-color: #2563eb;
   background-color: #ffffff;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-input.is-invalid, select.is-invalid {
+input.is-invalid,
+select.is-invalid {
   border-color: #ef4444;
   background-color: #fef2f2;
 }
 
-input.is-invalid:focus, select.is-invalid:focus {
+input.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
@@ -91,12 +85,12 @@ button {
 }
 
 .btn-primary {
-  background-color: #1d8f21;
+  background-color: #3496db;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background-color: #2ad433;
+  background-color: #216291;
 }
 
 .btn-secondary {
@@ -120,16 +114,17 @@ button {
   margin: 2rem auto;
   padding: 2.5rem;
   background-color: #ffffff;
-  border: 2px solid transparent; /* Added base border so transition is smooth */
+  border: 2px solid transparent;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Enables smooth movement */
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  /* Enables smooth movement */
 }
 
 /* Hover state */
 .form-container:hover {
-  border-color: #2d8225;
+  border-color: #2f8acb;
   transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(45, 130, 37, 0.12);
 }
