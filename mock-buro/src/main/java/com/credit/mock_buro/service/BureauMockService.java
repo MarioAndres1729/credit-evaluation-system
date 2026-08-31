@@ -38,7 +38,7 @@ public class BureauMockService {
         );
     }
 
-    private void simularTimeout() {
+    private void simularTimeout() {// Simula un tiempo de espera de 10seg para probar el manejo de errores
         try {
             Thread.sleep(10_000);
         } catch (InterruptedException e) {

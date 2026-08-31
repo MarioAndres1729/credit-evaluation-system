@@ -39,7 +39,7 @@ public class BureauHttpClient implements BureauClient {
                                 .bodyValue(request)
                                 .retrieve()
                                 .bodyToMono(BureauResponseDTO.class)
-                                .timeout(Duration.ofSeconds(4))
+                                .timeout(Duration.ofSeconds(4)) // Establece un tiempo de espera de 4 segundos para simular la falla de tiempo de espera
                                 .block();
 
                 return new BureauCreditInformation(
@@ -50,13 +50,9 @@ public class BureauHttpClient implements BureauClient {
                 );
 
         } catch (Exception e) {
-
-            e.printStackTrace();    
-
             throw new BureauUnavailableException(
                     "No fue posible consultar el servicio de buró",
-                    e
-            );
+                    e);
         }
     }
 }
