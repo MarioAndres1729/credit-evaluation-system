@@ -18,21 +18,22 @@ public class DecisionEngine {
         this.validations = validations;
     }
 
-    public EvaluationResult evaluate(CreditApplication application) {
+    public List<ValidationResult> evaluate(CreditApplication application) {
 
-        List<ValidationResult> validationResults = new ArrayList<>();
+        List<ValidationResult> results = new ArrayList<>();
 
         for (Validation validation : validations) {
 
-            ValidationResult result = validation.validate(application);
+            ValidationResult result =
+                    validation.validate(application);
 
-            validationResults.add(result);
+            results.add(result);
 
             if (!result.isAprobado()) {
                 break;
             }
         }
 
-        return new EvaluationResult(validationResults);
+        return results;
     }
 }

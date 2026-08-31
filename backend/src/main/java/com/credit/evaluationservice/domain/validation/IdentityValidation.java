@@ -25,14 +25,14 @@ public class IdentityValidation implements Validation {
         if (blocked) {
             return new ValidationResult(
                     "Identidad",
-                    false,
+                    ValidationStatus.DOCUMENTO_BLOQUEADO,
                     "Documento encontrado en lista de bloqueo"
             );
         }
 
         return new ValidationResult(
                 "Identidad",
-                true,
+                ValidationStatus.APROBADO,
                 "Documento no bloqueado"
         );
     }

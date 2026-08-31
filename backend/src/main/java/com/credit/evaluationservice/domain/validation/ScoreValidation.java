@@ -19,7 +19,8 @@ public class ScoreValidation implements Validation {
     }
 
     @Override
-    public ValidationResult validate(CreditApplication application) {
+    public ValidationResult validate(
+            CreditApplication application) {
 
         BureauCreditInformation bureauInformation =
                 bureauClient.consultar(
@@ -30,17 +31,20 @@ public class ScoreValidation implements Validation {
         int score = bureauInformation.getScore();
 
         if (score >= MINIMUM_SCORE) {
+
             return new ValidationResult(
                     "Score",
-                    true,
-                    "Score " + score + " >= " + MINIMUM_SCORE
+                    ValidationStatus.APROBADO,
+                    "Score " + score + " >= " + MINIMUM_SCORE,
+                    score
             );
         }
 
         return new ValidationResult(
-            "Score",
-                false,
-                "Score " + score + " < " + MINIMUM_SCORE
+                "Score",
+                ValidationStatus.RECHAZADO,
+                "Score " + score + " < " + MINIMUM_SCORE,
+                score
         );
     }
 }

@@ -1,6 +1,6 @@
 package com.credit.evaluationservice.presentation;
 
-import com.credit.evaluationservice.application.decision.EvaluationResult;
+import com.credit.evaluationservice.application.response.EvaluationResponse;
 import com.credit.evaluationservice.application.service.CreditApplicationService;
 import com.credit.evaluationservice.domain.CreditApplication;
 
@@ -14,20 +14,24 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class CreditApplicationController {
 
-    private final CreditApplicationService creditEvaluationService;
+    private final CreditApplicationService creditApplicationService;
 
-    public CreditApplicationController(CreditApplicationService creditEvaluationService) {
-        this.creditEvaluationService = creditEvaluationService;
+    public CreditApplicationController(
+            CreditApplicationService creditApplicationService) {
+
+        this.creditApplicationService = creditApplicationService;
     }
 
-    /**
-     * Recibe la solicitud de crédito, la delega al servicio para pasarla por el 
-     * DecisionEngine (comenzando con IdentityValidation) y retorna el resultado.
-     */
     @PostMapping
-    public ResponseEntity<EvaluationResult> crearSolicitud(
+    public ResponseEntity<EvaluationResponse> crearSolicitud(
             @Valid @RequestBody CreditApplication request) {
-        EvaluationResult response = creditEvaluationService.evaluate(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        EvaluationResponse response =
+                creditApplicationService.evaluate(request);
+
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.CREATED
+        );
     }
 }

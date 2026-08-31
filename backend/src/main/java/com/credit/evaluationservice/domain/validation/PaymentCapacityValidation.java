@@ -22,14 +22,14 @@ public class PaymentCapacityValidation implements Validation {
         if (montoSolicitado <= montoMaximoPermitido) {
             return new ValidationResult(
                     "Capacidad de pago",
-                    true,
+                    ValidationStatus.APROBADO,
                     "Monto dentro del rango permitido"
             );
         }
 
         return new ValidationResult(
                 "Capacidad de pago",
-                false,
+                ValidationStatus.RECHAZADO,
                 "El monto solicitado excede el límite permitido según los ingresos"
         );
     }

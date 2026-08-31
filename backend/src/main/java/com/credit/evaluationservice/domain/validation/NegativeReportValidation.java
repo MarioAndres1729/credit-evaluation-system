@@ -28,14 +28,14 @@ public class NegativeReportValidation implements Validation {
         if (bureauInformation.isReporteNegativo()) {
             return new ValidationResult(
                     "Reporte negativo",
-                    false,
+                    ValidationStatus.RECHAZADO,
                     "El cliente presenta reporte negativo en el buró"
             );
         }
 
         return new ValidationResult(
                 "Reporte negativo",
-                true,
+                ValidationStatus.APROBADO,
                 "Sin reportes negativos"
         );
     }
