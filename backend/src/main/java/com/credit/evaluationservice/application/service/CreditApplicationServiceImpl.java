@@ -3,6 +3,7 @@ package com.credit.evaluationservice.application.service;
 import com.credit.evaluationservice.application.decision.DecisionEngine;
 import com.credit.evaluationservice.application.response.EvaluationResponse;
 import com.credit.evaluationservice.application.response.EvaluationResponseBuilder;
+import com.credit.evaluationservice.application.response.SolicitudConsultaResponse;
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.exception.BureauUnavailableException;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
@@ -105,5 +106,55 @@ public class CreditApplicationServiceImpl
         entity.setSiguientePaso(response.getSiguientePaso());
 
         solicitudesRepository.save(entity);
+    }
+        
+    @Override
+    public List<SolicitudConsultaResponse> consultarSolicitudes(
+            String tipoDocumento,
+            String numeroDocumento) {
+
+        List<SolicitudesEntity> solicitudes =
+                solicitudesRepository
+                        .findByTipoDocumentoAndNumeroDocumento(
+                                tipoDocumento,
+                                numeroDocumento);
+
+        return solicitudes.stream()
+                .map(this::convertirARespuesta)
+                .toList();
+    }
+
+    private SolicitudConsultaResponse convertirARespuesta(
+            SolicitudesEntity entity) {
+
+        List<ValidationResult> validaciones = null;
+
+        if (entity.getValidaciones() != null) {
+            try {
+                validaciones = objectMapper.readValue(
+                        entity.getValidaciones(),
+                        objectMapper.getTypeFactory()
+                                .constructCollectionType(
+                                        List.class,
+                                        ValidationResult.class
+                                ));
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(
+                        "No fue posible leer las validaciones",
+                        e
+                );
+            }
+        }
+
+        return new SolicitudConsultaResponse(
+                entity.getIdSolicitud(),
+                entity.getMontoSolicitado(),
+                entity.getPlazoMeses(),
+                entity.getTasaEstimada(),
+                entity.getScoreBureau(),
+                entity.getEstado(),
+                validaciones,
+                entity.getSiguientePaso()
+        );
     }
 }

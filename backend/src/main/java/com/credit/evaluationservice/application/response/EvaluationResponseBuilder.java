@@ -5,8 +5,9 @@ import com.credit.evaluationservice.domain.validation.ValidationResult;
 import com.credit.evaluationservice.domain.validation.ValidationStatus;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
-import java.util.UUID;
 
 public class EvaluationResponseBuilder {
 
@@ -20,7 +21,10 @@ public class EvaluationResponseBuilder {
     private String siguientePaso;
 
     public EvaluationResponseBuilder() {
-        this.idSolicitud = "SOL-" + UUID.randomUUID();
+        String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int sequence = ThreadLocalRandom.current().nextInt(1, 1000);
+        
+        this.idSolicitud = String.format("SOL-%s-%03d", datePart, sequence);
         this.fechaCreacion = LocalDateTime.now();
     }
 

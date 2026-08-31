@@ -1,7 +1,6 @@
 package com.credit.evaluationservice.application.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class EvaluationResponse {
 

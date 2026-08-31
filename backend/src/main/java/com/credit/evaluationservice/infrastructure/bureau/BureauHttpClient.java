@@ -6,7 +6,6 @@ import com.credit.evaluationservice.infrastructure.bureau.dto.BureauRequestDTO;
 import com.credit.evaluationservice.infrastructure.bureau.dto.BureauResponseDTO;
 
 import java.time.Duration;
-import java.util.concurrent.TimeoutException;
 import com.credit.evaluationservice.domain.exception.BureauUnavailableException;
 
 import org.springframework.stereotype.Component;

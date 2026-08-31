@@ -3,9 +3,9 @@ package com.credit.evaluationservice.application.decision;
 import com.credit.evaluationservice.domain.CreditApplication;
 import com.credit.evaluationservice.domain.validation.Validation;
 import com.credit.evaluationservice.domain.validation.ValidationResult;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
+import com.credit.evaluationservice.domain.validation.ValidationStatus;
 
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +18,8 @@ public class DecisionEngine {
         this.validations = validations;
     }
 
-    public List<ValidationResult> evaluate(CreditApplication application) {
+    public List<ValidationResult> evaluate(
+            CreditApplication application) {
 
         List<ValidationResult> results = new ArrayList<>();
 
@@ -29,7 +30,11 @@ public class DecisionEngine {
 
             results.add(result);
 
-            if (!result.isAprobado()) {
+            /*
+             * Se detiene la evaluación si esta validación
+             * no ha aprobado la solicitud.
+             */
+            if (result.getResultado() != ValidationStatus.APROBADO) {
                 break;
             }
         }
