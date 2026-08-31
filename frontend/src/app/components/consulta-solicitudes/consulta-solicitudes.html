@@ -43,19 +43,4 @@
       </button>
     </div>
   </form>
-
-  <!-- Resultado de consulta simulado / feedback -->
-  <div class="result-box" *ngIf="hasSearched">
-    <div class="result-header">
-      <span class="result-icon">ℹ️</span>
-      <div>
-        <strong>Resultados de consulta</strong>
-        <p>No se encontraron solicitudes pendientes activas para el documento ingresado.</p>
-      </div>
-    </div>
-    <div class="result-action">
-      <p>¿Deseas iniciar una nueva solicitud?</p>
-      <button type="button" class="btn-link" (click)="onNuevaSolicitud()">Comenzar solicitud ahora →</button>
-    </div>
-  </div>
 </div>

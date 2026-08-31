@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { SolicitudService } from '../../services/solicitud.service';
 
 @Component({
   selector: 'app-consulta-solicitudes',
@@ -13,7 +14,6 @@ import { Router, RouterModule } from '@angular/router';
 export class ConsultaSolicitudesComponent implements OnInit {
   consultaForm!: FormGroup;
   isSubmitted = false;
-  hasSearched = false;
   isSearching = false;
 
   documentTypes = [
@@ -24,13 +24,14 @@ export class ConsultaSolicitudesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private solicitudService: SolicitudService
   ) {}
 
   ngOnInit(): void {
     this.consultaForm = this.fb.group({
-      documentType: ['', [Validators.required]],
-      documentNumber: ['', [
+      documentType: [this.solicitudService.currentTipoDoc || '', [Validators.required]],
+      documentNumber: [this.solicitudService.currentNumDoc || '', [
         Validators.required,
         Validators.pattern('^[0-9]{6,12}$')
       ]]
@@ -53,18 +54,17 @@ export class ConsultaSolicitudesComponent implements OnInit {
       return;
     }
 
-    this.isSearching = true;
-    this.hasSearched = false;
-
-    // Simulate search action (ready to be hooked to API)
-    setTimeout(() => {
-      this.isSearching = false;
-      this.hasSearched = true;
-      console.log('Consultando solicitudes para:', this.consultaForm.value);
-    }, 600);
+    const { documentType, documentNumber } = this.consultaForm.value;
+    this.router.navigate(['/resultado-solicitudes'], {
+      queryParams: {
+        tipoDoc: documentType,
+        numDoc: documentNumber
+      }
+    });
   }
 
   onNuevaSolicitud(): void {
     this.router.navigate(['/solicitud-credito']);
   }
 }
+

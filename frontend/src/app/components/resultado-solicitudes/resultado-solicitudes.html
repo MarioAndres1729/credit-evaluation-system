@@ -1,0 +1,179 @@
+<div class="page-container">
+  <!-- Encabezado / Navegación superior -->
+  <div class="top-nav-card">
+    <div class="nav-left">
+      <button type="button" class="btn-nav" (click)="onVolverConsulta()">
+        ← Volver a Consulta
+      </button>
+      <div class="client-info">
+        <span class="badge-client">Cliente</span>
+        <span class="doc-text" *ngIf="tipoDocumento && numeroDocumento">
+          <strong>{{ tipoDocumento }}</strong>: {{ numeroDocumento }}
+        </span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button type="button" class="btn-action-primary" (click)="onNuevaSolicitud()">
+        + Nueva Solicitud
+      </button>
+    </div>
+  </div>
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando información de solicitudes...</p>
+  </div>
+
+  <!-- Estado sin solicitudes -->
+  <div class="empty-state" *ngIf="!isLoading && solicitudes.length === 0">
+    <div class="empty-icon">📂</div>
+    <h3>No se encontraron solicitudes registradas</h3>
+    <p>No existen solicitudes asociadas al documento consultado.</p>
+    <button type="button" class="btn-action-primary" (click)="onNuevaSolicitud()">
+      Crear primera solicitud de crédito
+    </button>
+  </div>
+
+  <!-- Contenido Principal cuando hay resultados -->
+  <div class="content-grid" *ngIf="!isLoading && solicitudes.length > 0">
+    
+    <!-- TARJETA PRINCIPAL: DETALLE DE LA SOLICITUD SELECCIONADA -->
+    <div class="detail-card" *ngIf="selectedSolicitud">
+      <div class="detail-header">
+        <div class="title-group">
+          <span class="section-tag">Detalle de Solicitud</span>
+          <h2>{{ selectedSolicitud.idSolicitud }}</h2>
+        </div>
+        <div class="status-pill" [ngClass]="getStatusClass(selectedSolicitud.estado)">
+          <span class="status-dot"></span>
+          {{ getStatusLabel(selectedSolicitud.estado) }}
+        </div>
+      </div>
+
+      <!-- Métricas Financieras -->
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <span class="metric-label">Monto Solicitado</span>
+          <span class="metric-value">{{ selectedSolicitud.montoSolicitado | currency:'COP':'$':'1.0-0' }}</span>
+          <span class="metric-sub">Pesos Colombianos</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">Plazo</span>
+          <span class="metric-value">{{ selectedSolicitud.plazoMeses }}</span>
+          <span class="metric-sub">Meses</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">Tasa Estimada</span>
+          <span class="metric-value">
+            {{ selectedSolicitud.tasaEstimada !== null ? (selectedSolicitud.tasaEstimada + '% M.V.') : 'N/A' }}
+          </span>
+          <span class="metric-sub">Interés aplicable</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">Score Buró</span>
+          <span class="metric-value">
+            {{ selectedSolicitud.scoreBureau !== null ? selectedSolicitud.scoreBureau : 'N/A' }}
+          </span>
+          <span class="metric-sub" *ngIf="selectedSolicitud.scoreBureau">
+            {{ selectedSolicitud.scoreBureau >= 700 ? 'Riesgo Bajo / Óptimo' : 'Riesgo Moderado' }}
+          </span>
+          <span class="metric-sub" *ngIf="!selectedSolicitud.scoreBureau">No registrado</span>
+        </div>
+      </div>
+
+      <!-- Validaciones de Crédito Realizadas -->
+      <div class="validations-section">
+        <h3>Validaciones de Sistema</h3>
+        <p class="section-desc">Resultados de las políticas y comprobaciones automatizadas:</p>
+        
+        <div class="validations-list">
+          <div 
+            class="validation-item" 
+            *ngFor="let val of selectedSolicitud.validaciones"
+            [ngClass]="getValidationStatusClass(val.resultado)">
+            <div class="val-left">
+              <span class="val-icon">{{ getValidationIcon(val.resultado) }}</span>
+              <div class="val-text">
+                <strong>{{ val.nombre }}</strong>
+                <p>{{ val.detalle }}</p>
+              </div>
+            </div>
+            <div class="val-right">
+              <span class="val-score" *ngIf="val.scoreBureau">Score: {{ val.scoreBureau }}</span>
+              <span class="val-badge" [ngClass]="getValidationStatusClass(val.resultado)">
+                {{ val.resultado }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Siguiente Paso -->
+      <div class="next-step-box" [class.no-step]="!selectedSolicitud.siguientePaso">
+        <div class="step-header">
+          <span class="step-icon">📋</span>
+          <h4>Siguiente Paso</h4>
+        </div>
+        <p class="step-content" *ngIf="selectedSolicitud.siguientePaso">
+          {{ selectedSolicitud.siguientePaso }}
+        </p>
+        <p class="step-content text-muted" *ngIf="!selectedSolicitud.siguientePaso">
+          No hay acciones pendientes programadas para esta solicitud en este momento.
+        </p>
+      </div>
+    </div>
+
+    <!-- TARJETA: HISTORIAL DE TODAS LAS SOLICITUDES -->
+    <div class="history-card">
+      <div class="history-header">
+        <h3>Historial de Solicitudes</h3>
+        <span class="history-count">{{ solicitudes.length }} registro(s)</span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="solicitudes-table">
+          <thead>
+            <tr>
+              <th>ID Solicitud</th>
+              <th>Monto</th>
+              <th>Plazo</th>
+              <th>Score</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr 
+              *ngFor="let item of solicitudes" 
+              [class.selected-row]="selectedSolicitud?.idSolicitud === item.idSolicitud">
+              <td>
+                <strong>{{ item.idSolicitud }}</strong>
+              </td>
+              <td>{{ item.montoSolicitado | currency:'COP':'$':'1.0-0' }}</td>
+              <td>{{ item.plazoMeses }} m</td>
+              <td>{{ item.scoreBureau || '-' }}</td>
+              <td>
+                <span class="table-status-pill" [ngClass]="getStatusClass(item.estado)">
+                  {{ getStatusLabel(item.estado) }}
+                </span>
+              </td>
+              <td>
+                <button 
+                  type="button" 
+                  class="btn-table-action"
+                  (click)="onSelectSolicitud(item)">
+                  {{ selectedSolicitud?.idSolicitud === item.idSolicitud ? 'Viendo' : 'Ver detalle' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
